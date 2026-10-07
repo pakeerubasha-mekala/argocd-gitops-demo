@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: podinfo-prod
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/pakeerubasha-mekala/argocd-gitops-demo.git
+    targetRevision: main
+    path: manifests/podinfo/overlays/prod
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: podinfo-prod
+  syncPolicy:
+    # Production: Argo CD shows the diff but a human presses Sync.
+    syncOptions:
+      - CreateNamespace=true
